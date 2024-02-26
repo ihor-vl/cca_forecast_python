@@ -12,6 +12,13 @@ NIGHT_STARTING_HOUR = 18
 ROUNDING_PRECISION = 2
 
 
+class ForecastItem:
+    def __init__(self, value, item_type, period):
+        self.value = value
+        self.type = item_type
+        self.period: period
+
+
 class Entry:
     def __init__(self, average_temperature, probability_of_rain, date_time):
         self.average_temperature = average_temperature
