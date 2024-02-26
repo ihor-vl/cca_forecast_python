@@ -43,7 +43,50 @@ class Summary:
             if item.type == "temperature"
             and item.period == MORNING
         ]
-        return sum(morning_temperature_items) / len(morning_temperature_items)
+        return sum(morning_temperature_items) / len(morning_temperature_items) if morning_temperature_items else None
+
+    def get_afternoon_average_temperature(self):
+        afternoon_temperature_items = [
+            item for item in self.forecast_items
+            if item.type == "temperature"
+            and item.period == AFTERNOON
+        ]
+        return sum(afternoon_temperature_items) / len(afternoon_temperature_items) if afternoon_temperature_items \
+            else None
+
+    def get_morning_chance_of_rain(self):
+        morning_chance_of_rain = [
+            item for item in self.forecast_items
+            if item.type == "rain"
+            and item.period == MORNING
+        ]
+        return round(sum(morning_chance_of_rain) / len(morning_chance_of_rain), ROUNDING_PRECISION) if morning_chance_of_rain else None
+
+    def get_afternoon_chance_of_rain(self):
+        afternoon_chance_of_rain = [
+            item for item in self.forecast_items
+            if item.type == "rain"
+            and item.period == AFTERNOON
+        ]
+        return round(sum(afternoon_chance_of_rain) / len(afternoon_chance_of_rain), ROUNDING_PRECISION) if afternoon_chance_of_rain else None
+
+    def get_high_temperature(self):
+        return max([item for item in self.forecast_items if item.type == "temperature"])
+
+    def get_low_temperature(self):
+        return min([item for item in self.forecast_items if item.type == "temperature"])
+
+
+    def show(self) -> dict[str, str | float | None]:
+        return {
+            "morning_average_temperature": self.get_morning_average_temperature() or "Insufficient forecast data",
+            "morning_chance_of_rain": self.get_morning_chance_of_rain() or "Insufficient forecast data",
+            "afternoon_average_temperature": self.get_afternoon_average_temperature() or "Insufficient forecast data",
+            "afternoon_chance_of_rain": self.get_afternoon_chance_of_rain() or "Insufficient forecast data",
+            "high_temperature": self.get_high_temperature(),
+            "low_temperature": self.get_low_temperature()
+        }
+
 
 
 def group_entries_by_day(data, grp_day):
