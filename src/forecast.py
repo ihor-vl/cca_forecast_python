@@ -33,6 +33,19 @@ class Entry:
             return AFTERNOON
 
 
+class Summary:
+    def __init__(self, forecast_items):
+        self.forecast_items = forecast_items
+
+    def get_morning_average_temperature(self):
+        morning_temperature_items = [
+            item for item in self.forecast_items
+            if item.type == "temperature"
+            and item.period == MORNING
+        ]
+        return sum(morning_temperature_items) / len(morning_temperature_items)
+
+
 def group_entries_by_day(data, grp_day):
     for e in data:
         entry = Entry(e["average_temperature"], e["probability_of_rain"], e["date_time"])
