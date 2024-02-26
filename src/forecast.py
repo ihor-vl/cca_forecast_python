@@ -2,11 +2,19 @@ from datetime import datetime
 from collections import defaultdict
 
 
+class Entry:
+    def __init__(self, average_temperature, probability_of_rain, date_time):
+        self.average_temperature = average_temperature
+        self.probability_of_rain = probability_of_rain
+        self.date_time = date_time
+
+
 def group_entries_by_day(data, grp_day):
     for e in data:
-        entry_time = datetime.fromisoformat(e["date_time"].replace('Z', '+00:00'))
+        entry = Entry(e["average_temperature"], e["probability_of_rain"], e["date_time"])
+        entry_time = datetime.fromisoformat(entry.date_time.replace('Z', '+00:00'))
         key = entry_time.date()
-        grp_day[key].append(e)
+        grp_day[key].append(entry)
 
 
 def format_reader_friendly_date(day):
@@ -15,18 +23,18 @@ def format_reader_friendly_date(day):
 
 def process_each_day(entries) -> dict:
     morning_t, morning_r, afternoon_t, afternoon_r = [], [], [], []
-    all_t = [entry["average_temperature"] for entry in entries]
+    all_t = [entry.average_temperature for entry in entries]
 
     for e in entries:
-        entry_time = datetime.fromisoformat(e["date_time"].replace('Z', '+00:00'))
+        entry_time = datetime.fromisoformat(e.date_time.replace('Z', '+00:00'))
         # collect morning period entries
         if 6 <= entry_time.hour < 12:
-            morning_t.append(e["average_temperature"])
-            morning_r.append(e["probability_of_rain"])
+            morning_t.append(e.average_temperature)
+            morning_r.append(e.probability_of_rain)
         # collection afternoon period entries
         elif 12 <= entry_time.hour < 18:
-            afternoon_t.append(e["average_temperature"])
-            afternoon_r.append(e["probability_of_rain"])
+            afternoon_t.append(e.average_temperature)
+            afternoon_r.append(e.probability_of_rain)
 
     summary = {
         # if no morning data, report insufficient data
