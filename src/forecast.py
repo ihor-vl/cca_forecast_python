@@ -9,7 +9,7 @@ def group_entries_by_day(data, grp_day):
         grp_day[key].append(e)
 
 
-def process_each_day(day, entries, summaries):
+def process_each_day(entries) -> dict:
     morning_t, morning_r, afternoon_t, afternoon_r = [], [], [], []
     all_t = [entry["average_temperature"] for entry in entries]
 
@@ -39,10 +39,7 @@ def process_each_day(day, entries, summaries):
         "low_temperature": min(all_t)
     }
 
-    # format reader-friendly date
-    day_name = day.strftime("%A %B %d").replace(" 0", " ")
-
-    summaries[day_name] = summary
+    return summary
 
 
 def summarize_forecast(data):
@@ -52,6 +49,10 @@ def summarize_forecast(data):
     group_entries_by_day(data, grp_day)
 
     for day, entries in grp_day.items():
-        process_each_day(day, entries, summaries)
+        summary = process_each_day(entries)
+
+        # format reader-friendly date
+        day_name = day.strftime("%A %B %d").replace(" 0", " ")
+        summaries[day_name] = summary
 
     return summaries
